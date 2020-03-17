@@ -115,6 +115,7 @@ static int FPsshade        (func_info *);
 static int FRealCurrent    (func_info *);
 static int FRealnow        (func_info *);
 static int FRealtoday      (func_info *);
+static int FSetenv         (func_info *);
 static int FSgn            (func_info *);
 static int FShell          (func_info *);
 static int FSlide          (func_info *);
@@ -200,6 +201,7 @@ extern int ValStackPtr;
 #define LOWER(c) (isupper(c) ? tolower(c) : c)
 
 /* The array holding the built-in functions. */
+/* Needs to be sorted                        */
 BuiltinFunc Func[] = {
 /*	Name		minargs maxargs	is_constant func   */
 
@@ -265,6 +267,7 @@ BuiltinFunc Func[] = {
     {   "realcurrent",  0,      0,      0,          FRealCurrent},
     {   "realnow",      0,      0,      0,          FRealnow},
     {   "realtoday",    0,      0,      0,          FRealtoday },
+    {   "setenv",       2,      2,      0,          FSetenv },
     {   "sgn",          1,      1,      1,          FSgn    },
     {   "shell",        1,      2,      0,          FShell  },
     {   "slide",        2,      NO_MAX, 0,          FSlide  },
@@ -1163,6 +1166,17 @@ static int FGetenv(func_info *info)
 {
     ASSERT_TYPE(0, STR_TYPE);
     return RetStrVal(getenv(ARGSTR(0)), info);
+}
+
+/***************************************************************/
+/*                                                             */
+/*  FSetenv - set the value of an environment variable.        */
+/*                                                             */
+/***************************************************************/
+static int FSetenv(func_info *info)
+{
+    ASSERT_TYPE(0, STR_TYPE);
+    return setenv(ARGSTR(0), ARGSTR(1), 1);
 }
 
 /***************************************************************/
