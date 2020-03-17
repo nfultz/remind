@@ -1176,6 +1176,7 @@ static int FGetenv(func_info *info)
 static int FSetenv(func_info *info)
 {
     ASSERT_TYPE(0, STR_TYPE);
+    ASSERT_TYPE(1, STR_TYPE);
     return setenv(ARGSTR(0), ARGSTR(1), 1);
 }
 
