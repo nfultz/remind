@@ -112,6 +112,7 @@ static int FOstype         (func_info *);
 static int FPlural         (func_info *);
 static int FPsmoon         (func_info *);
 static int FPsshade        (func_info *);
+static int FRandInt        (func_info *);
 static int FRealCurrent    (func_info *);
 static int FRealnow        (func_info *);
 static int FRealtoday      (func_info *);
@@ -262,6 +263,7 @@ BuiltinFunc Func[] = {
     {   "plural",       1,      3,      1,          FPlural },
     {   "psmoon",       1,      4,      1,          FPsmoon},
     {   "psshade",      1,      3,      1,          FPsshade},
+    {   "randint",      1,      2,      0,          FRandInt},
     {   "realcurrent",  0,      0,      0,          FRealCurrent},
     {   "realnow",      0,      0,      0,          FRealnow},
     {   "realtoday",    0,      0,      0,          FRealtoday },
@@ -1211,6 +1213,35 @@ static int FDefined(func_info *info)
 	RETVAL = 1;
     else
 	RETVAL = 0;
+    return OK;
+}
+
+/***************************************************************/
+/*                                                             */
+/*  FRandInt - return a random integer                         */
+/*                                                             */
+/***************************************************************/
+static int FRandInt(func_info *info)
+{
+    int low = 1;
+    int hi = 1;
+    int i = 0;
+
+    /* 1 or 2 args required */
+    if (Nargs == 0) return E_2FEW_ARGS;
+    if (Nargs >= 3) return E_2MANY_ARGS;
+
+    if (Nargs == 2) {
+        if (ARG(0).type != INT_TYPE) return E_BAD_TYPE;
+        low = ARG(0).v.val;
+        i = 1;
+    }
+
+    if (ARG(i).type != INT_TYPE) return E_BAD_TYPE;
+    hi = ARG(i).v.val;
+
+    RetVal.type = INT_TYPE;
+    RETVAL = (rand() % (hi - low + 1)) + low;
     return OK;
 }
 
